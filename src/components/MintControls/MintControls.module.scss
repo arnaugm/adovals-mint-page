@@ -1,0 +1,26 @@
+@import '../common/text.scss';
+@import '../common/spacing.scss';
+
+.mintAmount {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: $spacing-base;
+}
+
+.mintAmountButton {
+  display: flex;
+  align-items:center;
+  cursor: pointer;
+}
+
+.mintAmountNumber {
+  width: 19.8rem;
+  font-size: $text-medium;
+  font-weight: bold;
+}
+
+.disclaimer {
+  font-size: $text-small;
+  font-style: italic;
+}

@@ -1,0 +1,42 @@
+@import './common/text.scss';
+@import './common/spacing.scss';
+
+.App {
+  text-align: center;
+  color: white;
+}
+
+.title {
+  font-weight: bold;
+  font-size: $text-large;
+  margin-bottom: $spacing-small;
+}
+
+.dates {
+  font-size: $text-base;
+  margin-bottom: $spacing-medium;
+}
+
+.walletAddress {
+  display: none;
+}
+
+.adovalImg {
+  border-radius: 6.7%;
+  width: 574px;
+  height: 574px;
+  margin-bottom: $spacing-medium;
+}
+
+.actionButton {
+  background-color: #ffac1f;
+  color: white;
+  border: none;
+  font-family: 'Poppins';
+  font-size: $text-base;
+  font-weight: bold;
+  padding: 0.7rem 2.625rem;
+  border-radius: 15px;
+  margin-bottom: $spacing-medium;
+  cursor: pointer;
+}

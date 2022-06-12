@@ -1,0 +1,18 @@
+@import '../common/text.scss';
+@import '../common/spacing.scss';
+
+.mintedTokens {
+  font-size: $text-xl;
+  font-weight: bold;
+}
+
+.mintedTokensText {
+  font-size: $text-base;
+  margin-bottom: $spacing-medium;
+}
+
+.tokenPrice {
+  font-size: $text-medium;
+  font-weight: bold;
+  margin-bottom: $spacing-base;
+}

@@ -1,24 +1,21 @@
 import PropTypes from 'prop-types';
 
-import './TokensInfo.css';
+import STYLES from './TokensInfo.module.scss';
 
-const TokensInfo = ({ minted, total, price, presalePrice }) => (
-  <>
-    <div>
-      <div>
-        {minted} / {total}
-      </div>
-      <div>ADOVALS MINTED</div>
+const TokensInfo = ({ minted, total, price }) => (
+  <div>
+    <div className={STYLES.mintedTokens}>
+      {minted} / {total}
     </div>
-    <div>{price} ETH (presale: {presalePrice} ETH)</div>
-  </>
+    <div className={STYLES.mintedTokensText}>Adovals minted</div>
+    <div className={STYLES.tokenPrice}>{price} ETH</div>
+  </div>
 );
 
 TokensInfo.propTypes = {
   minted: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
   price: PropTypes.string.isRequired,
-  presalePrice: PropTypes.string.isRequired,
 };
 
 export default TokensInfo;

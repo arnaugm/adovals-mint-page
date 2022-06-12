@@ -15,7 +15,7 @@ const blockchainConnect = async (setConnectionReady) => {
     contract = new ethers.Contract(contractAddress, Adovals.abi, signer);
     setConnectionReady(true);
   } else {
-    console.log('Please install MetaMask to interact with this page');
+    throw Error('Please install MetaMask to interact with this page');
   }
 };
 

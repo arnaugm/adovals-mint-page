@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import './MintControls.css';
+import STYLE from './MintControls.module.scss';
+import APP_STYLE from '../App.module.scss';
 import { mintToken } from '../../contract-gateway';
 import { getProof } from '../../merkle-tree';
 
@@ -35,16 +36,24 @@ const MintControls = ({ account, presale, maxMintAmount, price }) => {
   return (
     <>
       <div>
-        <div>
-          <button onClick={decreaseMintAmount}>-</button>
-          <span>{mintAmount}</span>
-          <button onClick={increaseMintAmount}>+</button>
+        <div className={STYLE.mintAmount}>
+          <div className={STYLE.mintAmountButton} onClick={decreaseMintAmount}>
+            <img src="button-minus.png" height="48" width="48" />
+          </div>
+          <div className={STYLE.mintAmountNumber}>{mintAmount}</div>
+          <div className={STYLE.mintAmountButton} onClick={increaseMintAmount}>
+            <img src="button-plus.png" height="48" width="48" />
+          </div>
         </div>
         <div>
-          <button onClick={mint}>mint</button>
+          <button onClick={mint} className={APP_STYLE.actionButton}>
+            Mint
+          </button>
         </div>
       </div>
-      <div>You can mint a max of {maxMintAmount} Adovals</div>
+      <div className={STYLE.disclaimer}>
+        You can mint a max of {maxMintAmount} Adovals
+      </div>
     </>
   );
 };

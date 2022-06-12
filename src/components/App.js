@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 
-import './App.css';
+import STYLES from './App.module.scss';
 import TokensInfo from './TokensInfo';
 import MintControls from './MintControls';
 import OwnerControls from './OwnerControls';
+import ErrorMessage from './ErrorMessage';
 import {
   blockchainConnect,
   getMintedTokens,
@@ -21,6 +22,7 @@ const App = () => {
   const [account, setAccount] = useState(
     window.ethereum ? window.ethereum.selectedAddress : null,
   );
+  const [error, setError] = useState(null);
 
   if (window.ethereum) {
     window.ethereum.on('accountsChanged', (accounts) => {
@@ -60,18 +62,29 @@ const App = () => {
   }, [connectionReady]);
 
   return (
-    <div className="App">
-      <h1>Mint your Adovals</h1>
-      <h2>Presale date: XX/XX/XXXX / Mint date: XX/XX/XXXX</h2>
-      {connectionReady && <p>Wallet address: {account}</p>}
-      <img width={200} height={200} />
+    <div className={STYLES.App}>
+      <h1 className={STYLES.title}>Mint your Adovals!</h1>
+      <div className={STYLES.dates}>Data de Presale i Mint</div>
+      {window.ethereum && (
+        <p className={STYLES.walletAddress}>Wallet address: {account}</p>
+      )}
+      <img
+        src="adoval.png"
+        width={574}
+        height={574}
+        className={STYLES.adovalImg}
+        alt="Adovals"
+      />
       {contractData ? (
         <>
           <TokensInfo
             minted={contractData.mintedTokens}
             total={contractData.totalTokens}
-            price={contractData.tokenPrice}
-            presalePrice={contractData.tokenPresalePrice}
+            price={
+              contractData.inPresale
+                ? contractData.tokenPresalePrice
+                : contractData.tokenPrice
+            }
           />
           <MintControls
             account={window.ethereum.selectedAddress}
@@ -89,12 +102,24 @@ const App = () => {
           />
         </>
       ) : (
-        <button onClick={() => blockchainConnect(setConnectionReady)}>
-          connect
-        </button>
+        <div>
+          <button
+            className={STYLES.actionButton}
+            onClick={async () => {
+              try {
+                await blockchainConnect(setConnectionReady);
+              } catch (e) {
+                setError(e.message);
+              }
+            }}
+          >
+            Connect wallet
+          </button>
+        </div>
       )}
 
       {connectionReady && <OwnerControls />}
+      {error && <ErrorMessage message={error} />}
     </div>
   );
 };
