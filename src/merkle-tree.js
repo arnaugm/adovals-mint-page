@@ -1,9 +1,9 @@
 import { MerkleTree } from 'merkletreejs';
 import keccak256 from 'keccak256';
 
-import whitelist from './whitelist';
+import allowlist from './allowlist';
 
-const merkleTree = new MerkleTree(whitelist, keccak256, {
+const merkleTree = new MerkleTree(allowlist, keccak256, {
   sortPairs: true,
 });
 

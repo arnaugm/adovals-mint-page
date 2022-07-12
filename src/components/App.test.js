@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import App from './App';
 
 const ownerAddress = '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266';
-const whitelistedAddress = '0x70997970c51812dc3a010c7d01b50e0d17dc79c8';
+const allowlistedAddress = '0x70997970c51812dc3a010c7d01b50e0d17dc79c8';
 
 const connectWallet = (address) => {
   window.ethereum.selectedAddress = address;
@@ -130,10 +130,10 @@ describe('account management', () => {
       screen.getByText(`Wallet address: ${ownerAddress}`),
     ).toBeInTheDocument();
 
-    accountsChangedEvent([whitelistedAddress]);
+    accountsChangedEvent([allowlistedAddress]);
 
     expect(
-      screen.getByText(`Wallet address: ${whitelistedAddress}`),
+      screen.getByText(`Wallet address: ${allowlistedAddress}`),
     ).toBeInTheDocument();
   });
 
@@ -148,10 +148,10 @@ describe('account management', () => {
       screen.getByText(`Wallet address: ${ownerAddress}`),
     ).toBeInTheDocument();
 
-    accountsChangedEvent([whitelistedAddress]);
+    accountsChangedEvent([allowlistedAddress]);
 
     expect(
-      screen.getByText(`Wallet address: ${whitelistedAddress}`),
+      screen.getByText(`Wallet address: ${allowlistedAddress}`),
     ).toBeInTheDocument();
   });
 
@@ -171,11 +171,11 @@ describe('account management', () => {
 });
 
 describe('mint', () => {
-  test('mint presale in whitelist', () => {
+  test('mint presale in allowlist', () => {
     throw Error('pending');
   });
 
-  test('mint in presale not in whitelist', () => {
+  test('mint in presale not in allowlist', () => {
     throw Error('pending');
   });
 
