@@ -61,17 +61,17 @@ describe('page load', () => {
 
     render(<App />);
 
-    expect(screen.getByText('Mint your Adovals')).toBeInTheDocument();
+    expect(screen.getByText('Mint your Adovals!')).toBeInTheDocument();
     expect(screen.queryByText('Wallet address:')).toBeNull();
-    expect(screen.getByText('connect')).toBeInTheDocument();
+    expect(screen.getByText('Connect wallet')).toBeInTheDocument();
   });
 
   test('Metamask is installed', () => {
     render(<App />);
 
-    expect(screen.getByText('Mint your Adovals')).toBeInTheDocument();
+    expect(screen.getByText('Mint your Adovals!')).toBeInTheDocument();
     expect(screen.getByText('Wallet address:')).toBeInTheDocument();
-    expect(screen.getByText('connect')).toBeInTheDocument();
+    expect(screen.getByText('Connect wallet')).toBeInTheDocument();
   });
 
   test('load when wallet is already connected', () => {
@@ -79,31 +79,31 @@ describe('page load', () => {
 
     render(<App />);
 
-    expect(screen.getByText('Mint your Adovals')).toBeInTheDocument();
+    expect(screen.getByText('Mint your Adovals!')).toBeInTheDocument();
     expect(
       screen.getByText(`Wallet address: ${ownerAddress}`),
     ).toBeInTheDocument();
-    expect(screen.getByText('connect')).toBeInTheDocument();
+    expect(screen.getByText('Connect wallet')).toBeInTheDocument();
   });
 });
 
 describe('account management', () => {
   test('connect wallet account', async () => {
     render(<App />);
-    await userEvent.click(screen.getByText('connect'));
+    await userEvent.click(screen.getByText('Connect wallet'));
 
     expect(
       screen.getByText(`Wallet address: ${ownerAddress}`),
     ).toBeInTheDocument();
-    expect(screen.queryByText('connect')).toBeNull();
-    expect(screen.getByText('ADOVALS MINTED')).toBeInTheDocument();
+    expect(screen.queryByText('Connect wallet')).toBeNull();
+    expect(screen.getByText('Adovals minted')).toBeInTheDocument();
   });
 
   test('connect wallet account without metamask installed', async () => {
     uninstallMetamask();
 
     render(<App />);
-    await userEvent.click(screen.getByText('connect'));
+    await userEvent.click(screen.getByText('Connect wallet'));
 
     expect(
       screen.getByText('Please install MetaMask to interact with this page'),
@@ -112,13 +112,13 @@ describe('account management', () => {
 
   test('disconnect wallet account', async () => {
     render(<App />);
-    await userEvent.click(screen.getByText('connect'));
+    await userEvent.click(screen.getByText('Connect wallet'));
 
-    expect(screen.getByText('ADOVALS MINTED')).toBeInTheDocument();
+    expect(screen.getByText('Adovals minted')).toBeInTheDocument();
 
     accountsChangedEvent([]);
 
-    await screen.findByText('connect');
+    await screen.findByText('Connect wallet');
   });
 
   test('swap account while connected without data loaded', () => {
@@ -142,7 +142,7 @@ describe('account management', () => {
 
     render(<App />);
 
-    await userEvent.click(screen.getByText('connect'));
+    await userEvent.click(screen.getByText('Connect wallet'));
 
     expect(
       screen.getByText(`Wallet address: ${ownerAddress}`),
@@ -160,13 +160,13 @@ describe('account management', () => {
 
     render(<App />);
 
-    expect(screen.getByText('Mint your Adovals')).toBeInTheDocument();
-    expect(screen.getByText('connect')).toBeInTheDocument();
+    expect(screen.getByText('Mint your Adovals!')).toBeInTheDocument();
+    expect(screen.getByText('Connect wallet')).toBeInTheDocument();
 
     installMetamask();
 
-    expect(screen.getByText('Mint your Adovals')).toBeInTheDocument();
-    expect(screen.getByText('connect')).toBeInTheDocument();
+    expect(screen.getByText('Mint your Adovals!')).toBeInTheDocument();
+    expect(screen.getByText('Connect wallet')).toBeInTheDocument();
   });
 });
 
