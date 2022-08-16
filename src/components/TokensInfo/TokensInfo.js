@@ -8,7 +8,12 @@ const TokensInfo = ({ minted, total, price }) => (
       {minted} / {total}
     </div>
     <div className={STYLES.mintedTokensText}>Adovals minted</div>
-    <div className={STYLES.tokenPrice}>{price} ETH</div>
+    <div className={STYLES.tokenPrice}>
+      {price} ETH
+      <p className={STYLES.gasDisclaimer}>
+        (Gas cost not included in the price)
+      </p>
+    </div>
   </div>
 );
 

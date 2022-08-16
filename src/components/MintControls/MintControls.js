@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import STYLE from './MintControls.module.scss';
+import STYLES from './MintControls.module.scss';
 import APP_STYLE from '../App.module.scss';
 import { mintToken } from '../../contract-gateway';
 import { getProof, isAllowlisted } from '../../merkle-tree';
@@ -49,8 +49,8 @@ const MintControls = ({
   return !presale || allowlisted ? (
     <>
       <div>
-        <div className={STYLE.mintAmount}>
-          <div className={STYLE.mintAmountButton} onClick={decreaseMintAmount}>
+        <div className={STYLES.mintAmount}>
+          <div className={STYLES.mintAmountButton} onClick={decreaseMintAmount}>
             <img
               src="button-minus.png"
               height="48"
@@ -59,12 +59,12 @@ const MintControls = ({
             />
           </div>
           <div
-            className={STYLE.mintAmountNumber}
+            className={STYLES.mintAmountNumber}
             data-testid="mint-amount-number"
           >
             {mintAmount}
           </div>
-          <div className={STYLE.mintAmountButton} onClick={increaseMintAmount}>
+          <div className={STYLES.mintAmountButton} onClick={increaseMintAmount}>
             <img
               src="button-plus.png"
               height="48"
@@ -79,13 +79,13 @@ const MintControls = ({
           </button>
         </div>
       </div>
-      <div className={STYLE.disclaimer}>
+      <div className={STYLES.disclaimer}>
         You can mint a max of {maxMintAmount} Adovals
       </div>
     </>
   ) : (
-    <div className={STYLE.notAllowlistedWarning}>
-      <i className={`${STYLE.warnIcon} material-icons`}>info_outline</i> Your address is not in the presale whitelist.<br/> Public mint will be available soon.
+    <div className={STYLES.notAllowlistedWarning}>
+      <i className={`${STYLES.warnIcon} material-icons`}>info_outline</i> Your address is not in the presale whitelist.<br/> Public mint will be available soon.
     </div>
   );
 };
