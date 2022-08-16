@@ -27,6 +27,11 @@ npm install
 npm start
 ```
 
+Alternatively use this command to avoid eslint blocking render:
+```bash
+DISABLE_ESLINT_PLUGIN=true npm start
+```
+
 
 * Open `http://localhost:3000`
 

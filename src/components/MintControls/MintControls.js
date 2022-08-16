@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import STYLE from './MintControls.module.scss';
 import APP_STYLE from '../App.module.scss';
 import { mintToken } from '../../contract-gateway';
-import { getProof } from '../../merkle-tree';
+import { getProof, isAllowlisted } from '../../merkle-tree';
 
 const MintControls = ({
   account,
@@ -16,6 +16,7 @@ const MintControls = ({
 }) => {
   const [mintAmount, setMintAmount] = useState(1);
   const [merkleProof, setMerkleProof] = useState([]);
+  const [allowlisted, setAllowlisted] = useState(false);
 
   const decreaseMintAmount = () => {
     if (mintAmount > 1) {
@@ -41,10 +42,11 @@ const MintControls = ({
     if (presale) {
       const proof = getProof(account);
       setMerkleProof(proof);
+      setAllowlisted(isAllowlisted(account));
     }
   }, [account, presale]);
 
-  return (
+  return !presale || allowlisted ? (
     <>
       <div>
         <div className={STYLE.mintAmount}>
@@ -81,6 +83,10 @@ const MintControls = ({
         You can mint a max of {maxMintAmount} Adovals
       </div>
     </>
+  ) : (
+    <div className={STYLE.notAllowlistedWarning}>
+      <i className={`${STYLE.warnIcon} material-icons`}>info_outline</i> Your address is not in the presale whitelist.<br/> Public mint will be available soon.
+    </div>
   );
 };
 

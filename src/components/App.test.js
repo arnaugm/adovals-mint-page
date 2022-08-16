@@ -24,15 +24,16 @@ global.console = {
   error: jest.fn(),
 };
 
-const connectWallet = (address) => {
-  window.ethereum.selectedAddress = address;
-};
-
 const accountsChangedEvent = (addressList) => {
   fireEvent(
     document,
     new CustomEvent('accountsChanged', { detail: addressList }),
   );
+};
+
+const connectWallet = (address) => {
+  window.ethereum.selectedAddress = address;
+  accountsChangedEvent(address ? [address] : []);
 };
 
 const installMetamask = () => {
@@ -58,8 +59,7 @@ jest.mock('../contract-gateway');
 beforeEach(() => {
   blockchainConnect.mockImplementation(async (callback) => {
     if (isMetaMaskInstalled()) {
-      connectWallet(ownerAddress);
-      accountsChangedEvent([ownerAddress]);
+      connectWallet(allowlistedAddress);
       await callback(true);
     } else {
       throw Error('Please install MetaMask to interact with this page');
@@ -101,13 +101,13 @@ describe('page load', () => {
   });
 
   test('load when wallet is already connected', () => {
-    connectWallet(ownerAddress);
+    connectWallet(allowlistedAddress);
 
     render(<App />);
 
     expect(screen.getByText('Mint your Adovals!')).toBeInTheDocument();
     expect(
-      screen.getByText(`Wallet address: ${ownerAddress}`),
+      screen.getByText(`Wallet address: ${allowlistedAddress}`),
     ).toBeInTheDocument();
     expect(screen.getByText('Connect wallet')).toBeInTheDocument();
   });
@@ -119,7 +119,7 @@ describe('account management', () => {
     await userEvent.click(screen.getByText('Connect wallet'));
 
     expect(
-      screen.getByText(`Wallet address: ${ownerAddress}`),
+      screen.getByText(`Wallet address: ${allowlistedAddress}`),
     ).toBeInTheDocument();
     expect(screen.queryByText('Connect wallet')).toBeNull();
     expect(screen.getByText('Adovals minted')).toBeInTheDocument();
@@ -142,42 +142,41 @@ describe('account management', () => {
 
     expect(screen.getByText('Adovals minted')).toBeInTheDocument();
 
-    accountsChangedEvent([]);
+    connectWallet(null);
 
     await screen.findByText('Connect wallet');
   });
 
   test('swap account while connected without data loaded', () => {
-    connectWallet(ownerAddress);
+    connectWallet(allowlistedAddress);
 
     render(<App />);
 
     expect(
-      screen.getByText(`Wallet address: ${ownerAddress}`),
+      screen.getByText(`Wallet address: ${allowlistedAddress}`),
     ).toBeInTheDocument();
 
-    accountsChangedEvent([allowlistedAddress]);
+    connectWallet(ownerAddress);
 
     expect(
-      screen.getByText(`Wallet address: ${allowlistedAddress}`),
+      screen.getByText(`Wallet address: ${ownerAddress}`),
     ).toBeInTheDocument();
   });
 
   test('swap account while connected and data is loaded', async () => {
-    connectWallet(ownerAddress);
+    connectWallet(allowlistedAddress);
 
     render(<App />);
-
     await userEvent.click(screen.getByText('Connect wallet'));
 
     expect(
-      screen.getByText(`Wallet address: ${ownerAddress}`),
+      screen.getByText(`Wallet address: ${allowlistedAddress}`),
     ).toBeInTheDocument();
 
-    accountsChangedEvent([allowlistedAddress]);
+    connectWallet(ownerAddress);
 
     expect(
-      screen.getByText(`Wallet address: ${allowlistedAddress}`),
+      screen.getByText(`Wallet address: ${ownerAddress}`),
     ).toBeInTheDocument();
   });
 
@@ -292,7 +291,7 @@ describe('mint', () => {
 
     expect(screen.getByText('2 / 1500')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByText('Mint'));
+    await userEvent.click(screen.getByRole('button', { name: 'Mint' }));
 
     expect(
       screen.getByText('Mint transaction sent successfully.'),
@@ -322,7 +321,7 @@ describe('error handling', () => {
     render(<App />);
     await userEvent.click(screen.getByText('Connect wallet'));
 
-    await userEvent.click(screen.getByText('Mint'));
+    await userEvent.click(screen.getByRole('button', { name: 'Mint' }));
 
     expect(
       screen.getByText('Unable to mint: Transaction error'),

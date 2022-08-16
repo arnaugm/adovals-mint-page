@@ -9,4 +9,9 @@ const merkleTree = new MerkleTree(allowlist, keccak256, {
 
 const getProof = (account) => merkleTree.getHexProof(keccak256(account));
 
-export { getProof }; // eslint-disable-line import/prefer-default-export
+const isAllowlisted = (account) => {
+  const accountHash = `0x${keccak256(account).toString('hex')}`;
+  return allowlist.includes(accountHash);
+};
+
+export { getProof, isAllowlisted };
