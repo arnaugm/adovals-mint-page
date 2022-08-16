@@ -18,7 +18,7 @@ npx hardhat run scripts/deploy.js --network localhost
 * Copy `artifacts` folder from `adovals-smart-contract` project after compilation into `src` folder of this project.
 
 
-* Add the recently deployed contract address to `contractAddress` variable in `src/contract-gateway.js` file.
+* Add the recently deployed contract address to `contractAddress` variable in `src/config.js` file.
 
 
 * From this project root:

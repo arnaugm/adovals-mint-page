@@ -15,6 +15,7 @@ import {
   getPresaleMaxMintAmount,
   getInPresale,
 } from '../contract-gateway';
+import { presaleDate, publicMintDate } from '../config';
 
 const addMaterialIconsLink = () => {
   const link = document.createElement('link');
@@ -96,7 +97,7 @@ const App = () => {
   return (
     <div className={STYLES.App}>
       <h1 className={STYLES.title}>Mint your Adovals!</h1>
-      <div className={STYLES.dates}>Data de Presale i Mint</div>
+      <div className={STYLES.dates}>Presale opens on {presaleDate} and public mint on {publicMintDate}</div>
       {window.ethereum && (
         <p className={STYLES.walletAddress}>Wallet address: {account}</p>
       )}
