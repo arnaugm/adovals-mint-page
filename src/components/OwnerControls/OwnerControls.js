@@ -1,23 +1,21 @@
 import { useEffect, useState } from 'react';
 
+import PropTypes from 'prop-types';
 import {
   getEnabled,
   enableContract,
   disableContract,
 } from '../../contract-gateway';
 
-const OwnerControls = () => {
-  const [, setState] = useState();
+const OwnerControls = ({ onError }) => {
   const [enabled, setEnabled] = useState();
 
   const enable = async () => {
     try {
       await enableContract();
       setEnabled(true);
-    } catch (err) {
-      setState(() => {
-        throw new Error(err.reason);
-      });
+    } catch (e) {
+      onError(e.reason, e.message);
     }
   };
 
@@ -25,10 +23,8 @@ const OwnerControls = () => {
     try {
       await disableContract();
       setEnabled(false);
-    } catch (err) {
-      setState(() => {
-        throw new Error(err.reason);
-      });
+    } catch (e) {
+      onError(e.reason, e.message);
     }
   };
 
@@ -50,6 +46,10 @@ const OwnerControls = () => {
       <button onClick={disable}>disable contract</button>
     </div>
   );
+};
+
+OwnerControls.propTypes = {
+  onError: PropTypes.func.isRequired,
 };
 
 export default OwnerControls;

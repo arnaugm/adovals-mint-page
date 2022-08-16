@@ -6,7 +6,14 @@ import APP_STYLE from '../App.module.scss';
 import { mintToken } from '../../contract-gateway';
 import { getProof } from '../../merkle-tree';
 
-const MintControls = ({ account, presale, maxMintAmount, price }) => {
+const MintControls = ({
+  account,
+  presale,
+  maxMintAmount,
+  price,
+  onSuccess,
+  onError,
+}) => {
   const [mintAmount, setMintAmount] = useState(1);
   const [merkleProof, setMerkleProof] = useState([]);
 
@@ -23,7 +30,11 @@ const MintControls = ({ account, presale, maxMintAmount, price }) => {
   };
 
   const mint = async () => {
-    await mintToken(mintAmount, merkleProof, price);
+    mintToken(mintAmount, merkleProof, price)
+      .then(() => onSuccess('Mint transaction sent successfully.'))
+      .catch((e) => {
+        onError(`Unable to mint: ${e.message}`, e.message);
+      });
   };
 
   useEffect(() => {
@@ -38,11 +49,26 @@ const MintControls = ({ account, presale, maxMintAmount, price }) => {
       <div>
         <div className={STYLE.mintAmount}>
           <div className={STYLE.mintAmountButton} onClick={decreaseMintAmount}>
-            <img src="button-minus.png" height="48" width="48" />
+            <img
+              src="button-minus.png"
+              height="48"
+              width="48"
+              data-testid="decrease-mint-button"
+            />
           </div>
-          <div className={STYLE.mintAmountNumber}>{mintAmount}</div>
+          <div
+            className={STYLE.mintAmountNumber}
+            data-testid="mint-amount-number"
+          >
+            {mintAmount}
+          </div>
           <div className={STYLE.mintAmountButton} onClick={increaseMintAmount}>
-            <img src="button-plus.png" height="48" width="48" />
+            <img
+              src="button-plus.png"
+              height="48"
+              width="48"
+              data-testid="increase-mint-button"
+            />
           </div>
         </div>
         <div>
@@ -63,6 +89,8 @@ MintControls.propTypes = {
   presale: PropTypes.bool.isRequired,
   maxMintAmount: PropTypes.number.isRequired,
   price: PropTypes.string.isRequired,
+  onSuccess: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
 };
 
 export default MintControls;

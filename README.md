@@ -6,7 +6,8 @@ npx hardhat node
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-* Add two test wallets to MetaMask by importing the accounts, use the private key provided in the `npx hardhat node` command:
+* Add three test wallets to MetaMask by importing the accounts, use the private key provided in the `npx hardhat node` command:
+  * The contract owner address, account #0 in the list
   * One present in the allowlist in `src/allowlist.js` (addresses there are previously hashed with `keccak256`)
   * One not present in the allowlist
 

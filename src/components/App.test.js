@@ -1,10 +1,28 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import App from './App';
+import {
+  blockchainConnect,
+  getMintedTokens,
+  getTotalTokens,
+  getTokenPrice,
+  getTokenPresalePrice,
+  getMaxMintAmount,
+  getPresaleMaxMintAmount,
+  getInPresale,
+  getEnabled,
+  mintToken,
+} from '../contract-gateway';
+
+let App;
 
 const ownerAddress = '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266';
 const allowlistedAddress = '0x70997970c51812dc3a010c7d01b50e0d17dc79c8';
+
+global.console = {
+  ...console,
+  error: jest.fn(),
+};
 
 const connectWallet = (address) => {
   window.ethereum.selectedAddress = address;
@@ -19,6 +37,7 @@ const accountsChangedEvent = (addressList) => {
 
 const installMetamask = () => {
   window.ethereum = {
+    isMetaMask: true,
     on: (eventName, handler) => {
       document.addEventListener(eventName, (event) => handler(event.detail));
     },
@@ -29,29 +48,36 @@ const uninstallMetamask = () => {
   delete window.ethereum;
 };
 
-const isMetamaskInstalled = () => typeof window.ethereum !== 'undefined';
+const isMetaMaskInstalled = () => {
+  const { ethereum } = window;
+  return Boolean(ethereum && ethereum.isMetaMask);
+};
 
-jest.mock('../contract-gateway', () => ({
-  blockchainConnect: async (callback) => {
-    if (isMetamaskInstalled()) {
+jest.mock('../contract-gateway');
+
+beforeEach(() => {
+  blockchainConnect.mockImplementation(async (callback) => {
+    if (isMetaMaskInstalled()) {
       connectWallet(ownerAddress);
       accountsChangedEvent([ownerAddress]);
       await callback(true);
     } else {
       throw Error('Please install MetaMask to interact with this page');
     }
-  },
-  getEnabled: () => true,
-  getMintedTokens: () => 2,
-  getTotalTokens: () => 1500,
-  getTokenPrice: () => '0.04 ETH',
-  getTokenPresalePrice: () => '0.03 ETH',
-  getMaxMintAmount: () => 10,
-  getPresaleMaxMintAmount: () => 2,
-  getInPresale: () => true,
-}));
+  });
 
-beforeEach(() => {
+  getEnabled.mockImplementation(() => Promise.resolve(true));
+  getMintedTokens.mockImplementation(() => Promise.resolve(2));
+  getTotalTokens.mockImplementation(() => Promise.resolve(1500));
+  getTokenPrice.mockImplementation(() => Promise.resolve('0.04'));
+  getTokenPresalePrice.mockImplementation(() => Promise.resolve('0.03'));
+  getMaxMintAmount.mockImplementation(() => Promise.resolve(10));
+  getPresaleMaxMintAmount.mockImplementation(() => Promise.resolve(2));
+  getInPresale.mockImplementation(() => Promise.resolve(true));
+  mintToken.mockImplementation(() => Promise.resolve());
+
+  App = require('./App').default; // eslint-disable-line global-require
+
   installMetamask();
 });
 
@@ -170,32 +196,136 @@ describe('account management', () => {
   });
 });
 
+describe('wallet connected', () => {
+  describe('presale', () => {
+    beforeEach(async () => {
+      getInPresale.mockImplementation(() => Promise.resolve(true));
+      App = require('./App').default; // eslint-disable-line global-require
+      render(<App />);
+      await userEvent.click(screen.getByText('Connect wallet'));
+    });
+
+    test('contract data is displayed when in presale', async () => {
+      expect(screen.getByText('2 / 1500')).toBeInTheDocument();
+      expect(screen.getByText('0.03 ETH')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Mint' })).toBeInTheDocument();
+      expect(
+        screen.getByText('You can mint a max of 2 Adovals'),
+      ).toBeInTheDocument();
+    });
+
+    test('plus button stops at presale max mint amount when in presale', async () => {
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(1);
+
+      await userEvent.click(screen.getByTestId('increase-mint-button'));
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(2);
+
+      await userEvent.click(screen.getByTestId('increase-mint-button'));
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(2);
+    });
+
+    test('minus button stops at 1 when in presale', async () => {
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(1);
+
+      await userEvent.click(screen.getByTestId('increase-mint-button'));
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(2);
+
+      await userEvent.click(screen.getByTestId('decrease-mint-button'));
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(1);
+
+      await userEvent.click(screen.getByTestId('decrease-mint-button'));
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(1);
+    });
+  });
+
+  describe('public mint', () => {
+    beforeEach(async () => {
+      getInPresale.mockImplementation(() => Promise.resolve(false));
+      App = require('./App').default; // eslint-disable-line global-require
+      render(<App />);
+      await userEvent.click(screen.getByText('Connect wallet'));
+    });
+
+    test('contract data is displayed when not in presale', async () => {
+      expect(screen.getByText('2 / 1500')).toBeInTheDocument();
+      expect(screen.getByText('0.04 ETH')).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Mint' })).toBeInTheDocument();
+      expect(
+        screen.getByText('You can mint a max of 10 Adovals'),
+      ).toBeInTheDocument();
+    });
+
+    test('plus button stops at max mint amount when not in presale', async () => {
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(1);
+
+      for (let i = 1; i < 10; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await userEvent.click(screen.getByTestId('increase-mint-button'));
+      }
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(10);
+
+      await userEvent.click(screen.getByTestId('increase-mint-button'));
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(10);
+    });
+
+    test('minus button stops at 1 when not in presale', async () => {
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(1);
+
+      await userEvent.click(screen.getByTestId('increase-mint-button'));
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(2);
+
+      await userEvent.click(screen.getByTestId('decrease-mint-button'));
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(1);
+
+      await userEvent.click(screen.getByTestId('decrease-mint-button'));
+      expect(screen.getByTestId('mint-amount-number')).toHaveTextContent(1);
+    });
+  });
+});
+
 describe('mint', () => {
-  test('mint presale in allowlist', () => {
-    throw Error('pending');
+  test('transaction success', async () => {
+    getInPresale.mockImplementation(() => Promise.resolve(true));
+    App = require('./App').default; // eslint-disable-line global-require
+    render(<App />);
+    await userEvent.click(screen.getByText('Connect wallet'));
+
+    expect(screen.getByText('2 / 1500')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByText('Mint'));
+
+    expect(
+      screen.getByText('Mint transaction sent successfully.'),
+    ).toBeInTheDocument();
+  });
+});
+
+describe('error handling', () => {
+  test('error getting contract data', async () => {
+    getMintedTokens.mockImplementation(() =>
+      Promise.reject(new Error('Contract unreachable')),
+    );
+    App = require('./App').default; // eslint-disable-line global-require
+    render(<App />);
+    await userEvent.click(screen.getByText('Connect wallet'));
+
+    expect(
+      screen.getByText('Error communicating with the contract'),
+    ).toBeInTheDocument();
   });
 
-  test('mint in presale not in allowlist', () => {
-    throw Error('pending');
-  });
+  test('transaction error', async () => {
+    mintToken.mockImplementation(() =>
+      Promise.reject(new Error('Transaction error')),
+    );
+    App = require('./App').default; // eslint-disable-line global-require
+    render(<App />);
+    await userEvent.click(screen.getByText('Connect wallet'));
 
-  test('mint presale owner', () => {
-    throw Error('pending');
-  });
+    await userEvent.click(screen.getByText('Mint'));
 
-  test('mint public', () => {
-    throw Error('pending');
-  });
-
-  test('mint públic owner', () => {
-    throw Error('pending');
-  });
-
-  test('transaction error', () => {
-    throw Error('pending');
-  });
-
-  test('transaction success', () => {
-    throw Error('pending');
+    expect(
+      screen.getByText('Unable to mint: Transaction error'),
+    ).toBeInTheDocument();
   });
 });
