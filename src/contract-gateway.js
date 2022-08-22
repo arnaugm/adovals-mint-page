@@ -66,7 +66,6 @@ const disableContract = async () => contract.enable(false);
 const mintToken = async (amount, merkleProof, price) => {
   const value = ethers.utils.parseEther(price);
   return contract.mint(amount, merkleProof, {
-    gasLimit: 1140000,
     value: value.mul(amount),
   });
 };
