@@ -34,6 +34,7 @@ const App = () => {
   );
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
+  const [connectButtonEnabled, setConnectButtonEnabled] = useState(true);
 
   if (window.ethereum) {
     window.ethereum.on('accountsChanged', (accounts) => {
@@ -140,11 +141,15 @@ const App = () => {
         <div>
           <button
             className={STYLES.actionButton}
+            disabled={!connectButtonEnabled}
             onClick={async () => {
               try {
+                setConnectButtonEnabled(false);
                 await blockchainConnect(setConnectionReady);
+                setConnectButtonEnabled(true);
               } catch (e) {
                 displayErrorMessage(e.message, e.message);
+                setConnectButtonEnabled(true);
               }
             }}
           >

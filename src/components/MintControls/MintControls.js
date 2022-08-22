@@ -17,6 +17,7 @@ const MintControls = ({
   const [mintAmount, setMintAmount] = useState(1);
   const [merkleProof, setMerkleProof] = useState([]);
   const [allowlisted, setAllowlisted] = useState(false);
+  const [mintButtonEnabled, setMintButtonEnabled] = useState(true);
 
   const decreaseMintAmount = () => {
     if (mintAmount > 1) {
@@ -31,11 +32,13 @@ const MintControls = ({
   };
 
   const mint = async () => {
+    setMintButtonEnabled(false);
     mintToken(mintAmount, merkleProof, price)
       .then(() => onSuccess('Mint transaction sent successfully.'))
       .catch((e) => {
         onError(`Unable to mint: ${e.message}`, e.message);
-      });
+      })
+      .finally(() => setMintButtonEnabled(true));
   };
 
   useEffect(() => {
@@ -74,7 +77,7 @@ const MintControls = ({
           </div>
         </div>
         <div>
-          <button onClick={mint} className={APP_STYLE.actionButton}>
+          <button onClick={mint} disabled={!mintButtonEnabled} className={APP_STYLE.actionButton}>
             Mint
           </button>
         </div>

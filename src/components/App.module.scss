@@ -43,3 +43,8 @@
   margin-bottom: $spacing-medium;
   cursor: pointer;
 }
+
+.actionButton:disabled {
+  background-color: #fbd593;
+  cursor: wait;
+}
