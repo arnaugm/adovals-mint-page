@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import STYLES from './App.module.scss';
 import TokensInfo from './TokensInfo';
 import MintControls from './MintControls';
-import OwnerControls from './OwnerControls';
 import PromptMessage from './PromptMessage';
 import {
   blockchainConnect,
@@ -98,7 +97,9 @@ const App = () => {
   return (
     <div className={STYLES.App}>
       <h1 className={STYLES.title}>Mint your Adovals!</h1>
-      <div className={STYLES.dates}>Presale opens on {presaleDate} and public mint on {publicMintDate}</div>
+      <div className={STYLES.dates}>
+        Presale opens on {presaleDate} and public mint on {publicMintDate}
+      </div>
       {window.ethereum && (
         <p className={STYLES.walletAddress}>Wallet address: {account}</p>
       )}
@@ -158,7 +159,6 @@ const App = () => {
         </div>
       )}
 
-      {connectionReady && <OwnerControls onError={displayErrorMessage} />}
       {message && (
         <PromptMessage
           type="success"
