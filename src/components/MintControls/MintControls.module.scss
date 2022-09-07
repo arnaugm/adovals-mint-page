@@ -1,5 +1,6 @@
 @import '../common/text.scss';
 @import '../common/spacing.scss';
+@import '../common/breakpoints.scss';
 
 .mintAmount {
   display: flex;
@@ -18,6 +19,10 @@
   width: 19.8rem;
   font-size: $text-medium;
   font-weight: bold;
+
+  @include small-screen-breakpoint {
+    width: 10rem;
+  }
 }
 
 .disclaimer {

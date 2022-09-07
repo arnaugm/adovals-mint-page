@@ -104,9 +104,11 @@ const App = () => {
         <p className={STYLES.walletAddress}>Wallet address: {account}</p>
       )}
       <img
-        src="adoval.png"
-        width={574}
-        height={574}
+        srcSet="adoval-240w.png 240w,
+                adoval-480w.png 480w"
+        sizes="(max-width: 580px) 240px,
+               480px"
+        src="adoval-480w.png"
         className={STYLES.adovalImg}
         alt="Adovals"
       />

@@ -1,5 +1,6 @@
 @import './common/text.scss';
 @import './common/spacing.scss';
+@import './common/breakpoints.scss';
 
 .App {
   display: flex;
@@ -13,11 +14,19 @@
   font-weight: bold;
   font-size: $text-large;
   margin-bottom: $spacing-small;
+
+  @include small-screen-breakpoint {
+    font-size: $text-medium;
+  }
 }
 
 .dates {
   font-size: $text-base;
   margin-bottom: $spacing-medium;
+
+  @include small-screen-breakpoint {
+    font-size: $text-small;
+  }
 }
 
 .walletAddress {
@@ -26,8 +35,6 @@
 
 .adovalImg {
   border-radius: 6.7%;
-  width: 574px;
-  height: 574px;
   margin-bottom: $spacing-medium;
 }
 
@@ -42,6 +49,10 @@
   border-radius: 15px;
   margin-bottom: $spacing-medium;
   cursor: pointer;
+
+  @include small-screen-breakpoint {
+    font-size: $text-small;
+  }
 }
 
 .actionButton:disabled {
