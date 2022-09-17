@@ -309,7 +309,9 @@ describe('error handling', () => {
     await userEvent.click(screen.getByText('Connect wallet'));
 
     expect(
-      screen.getByText('Error communicating with the contract'),
+      screen.getByText(
+        'Error communicating with the contract: Contract unreachable',
+      ),
     ).toBeInTheDocument();
   });
 

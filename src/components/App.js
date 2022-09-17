@@ -15,6 +15,7 @@ import {
   getInPresale,
 } from '../contract-gateway';
 import { presaleDate, publicMintDate } from '../config';
+import { parseError } from '../error-parser';
 
 const addMaterialIconsLink = () => {
   const link = document.createElement('link');
@@ -83,7 +84,10 @@ const App = () => {
         inPresale,
       });
     } catch (e) {
-      displayErrorMessage('Error communicating with the contract', e.message);
+      displayErrorMessage(
+        `Error communicating with the contract: ${parseError(e)}`,
+        e,
+      );
     }
   };
 

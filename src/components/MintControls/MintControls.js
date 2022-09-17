@@ -5,6 +5,7 @@ import STYLES from './MintControls.module.scss';
 import APP_STYLE from '../App.module.scss';
 import { mintToken } from '../../contract-gateway';
 import { getProof, isAllowlisted } from '../../merkle-tree';
+import { parseError } from '../../error-parser';
 
 const MintControls = ({
   account,
@@ -36,7 +37,7 @@ const MintControls = ({
     mintToken(mintAmount, merkleProof, price)
       .then(() => onSuccess('Mint transaction sent successfully.'))
       .catch((e) => {
-        onError(`Unable to mint: ${e.message}`, e.message);
+        onError(`Unable to mint: ${parseError(e)}`, e.message);
       })
       .finally(() => setMintButtonEnabled(true));
   };
