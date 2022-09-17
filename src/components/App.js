@@ -28,9 +28,7 @@ addMaterialIconsLink();
 const App = () => {
   const [connectionReady, setConnectionReady] = useState(false);
   const [contractData, setContractData] = useState();
-  const [account, setAccount] = useState(
-    window.ethereum ? window.ethereum.selectedAddress : null,
-  );
+  const [account, setAccount] = useState(null);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [connectButtonEnabled, setConnectButtonEnabled] = useState(true);
@@ -46,6 +44,11 @@ const App = () => {
       }
     });
   }
+
+  const connectionSuccess = (selectedAccount) => {
+    setAccount(selectedAccount);
+    setConnectionReady(true);
+  };
 
   const closeErrorMessage = () => {
     setError(null);
@@ -148,7 +151,7 @@ const App = () => {
             onClick={async () => {
               try {
                 setConnectButtonEnabled(false);
-                await blockchainConnect(setConnectionReady);
+                await blockchainConnect(connectionSuccess);
                 setConnectButtonEnabled(true);
               } catch (e) {
                 displayErrorMessage(e.message, e.message);

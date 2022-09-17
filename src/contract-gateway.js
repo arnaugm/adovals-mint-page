@@ -11,15 +11,15 @@ const isMetaMaskInstalled = () => {
   return Boolean(ethereum && ethereum.isMetaMask);
 };
 
-const blockchainConnect = async (setConnectionReady) => {
+const blockchainConnect = async (callback) => {
   if (isMetaMaskInstalled()) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await provider.send('eth_requestAccounts', []);
+    const accounts = await provider.send('eth_requestAccounts', []);
     const signer = provider.getSigner();
 
     contract = new ethers.Contract(contractAddress, Adovals.abi, signer);
 
-    setConnectionReady(true);
+    callback(accounts[0]);
   } else {
     throw Error('Please install MetaMask to interact with this page');
   }

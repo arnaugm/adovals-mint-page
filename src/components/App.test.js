@@ -60,7 +60,7 @@ beforeEach(() => {
   blockchainConnect.mockImplementation(async (callback) => {
     if (isMetaMaskInstalled()) {
       connectWallet(allowlistedAddress);
-      await callback(true);
+      await callback(allowlistedAddress);
     } else {
       throw Error('Please install MetaMask to interact with this page');
     }
@@ -100,15 +100,15 @@ describe('page load', () => {
     expect(screen.getByText('Connect wallet')).toBeInTheDocument();
   });
 
-  test('load when wallet is already connected', () => {
+  test('load when wallet is already connected, account data still not available', () => {
     connectWallet(allowlistedAddress);
 
     render(<App />);
 
     expect(screen.getByText('Mint your Adovals!')).toBeInTheDocument();
     expect(
-      screen.getByText(`Wallet address: ${allowlistedAddress}`),
-    ).toBeInTheDocument();
+      screen.queryByText(`Wallet address: ${allowlistedAddress}`),
+    ).toBeNull();
     expect(screen.getByText('Connect wallet')).toBeInTheDocument();
   });
 });
@@ -118,11 +118,11 @@ describe('account management', () => {
     render(<App />);
     await userEvent.click(screen.getByText('Connect wallet'));
 
+    expect(await screen.findByText('Adovals minted')).toBeInTheDocument();
     expect(
       screen.getByText(`Wallet address: ${allowlistedAddress}`),
     ).toBeInTheDocument();
     expect(screen.queryByText('Connect wallet')).toBeNull();
-    expect(screen.getByText('Adovals minted')).toBeInTheDocument();
   });
 
   test('connect wallet account without metamask installed', async () => {
@@ -153,8 +153,8 @@ describe('account management', () => {
     render(<App />);
 
     expect(
-      screen.getByText(`Wallet address: ${allowlistedAddress}`),
-    ).toBeInTheDocument();
+      screen.queryByText(`Wallet address: ${allowlistedAddress}`),
+    ).toBeNull();
 
     connectWallet(ownerAddress);
 

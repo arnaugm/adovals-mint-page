@@ -77,7 +77,11 @@ const MintControls = ({
           </div>
         </div>
         <div>
-          <button onClick={mint} disabled={!mintButtonEnabled} className={APP_STYLE.actionButton}>
+          <button
+            onClick={mint}
+            disabled={!mintButtonEnabled}
+            className={APP_STYLE.actionButton}
+          >
             Mint
           </button>
         </div>
@@ -88,7 +92,9 @@ const MintControls = ({
     </>
   ) : (
     <div className={STYLES.notAllowlistedWarning}>
-      <i className={`${STYLES.warnIcon} material-icons`}>info_outline</i> Your address is not in the presale whitelist.<br/> Public mint will be available soon.
+      <i className={`${STYLES.warnIcon} material-icons`}>info_outline</i> Your
+      address is not in the presale whitelist.
+      <br /> Public mint will be available soon.
     </div>
   );
 };
