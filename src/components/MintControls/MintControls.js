@@ -56,7 +56,7 @@ const MintControls = ({
         <div className={STYLES.mintAmount}>
           <div className={STYLES.mintAmountButton} onClick={decreaseMintAmount}>
             <img
-              src="button-minus.png"
+              src="https://adovals.com/wp-content/uploads/2022/09/button-minus.png"
               height="48"
               width="48"
               data-testid="decrease-mint-button"
@@ -70,7 +70,7 @@ const MintControls = ({
           </div>
           <div className={STYLES.mintAmountButton} onClick={increaseMintAmount}>
             <img
-              src="button-plus.png"
+              src="https://adovals.com/wp-content/uploads/2022/09/button-plus.png"
               height="48"
               width="48"
               data-testid="increase-mint-button"

@@ -8,12 +8,14 @@
   align-items: center;
   text-align: center;
   color: white;
+  line-height: normal;
 }
 
 .title {
   font-weight: bold;
   font-size: $text-large;
   margin-bottom: $spacing-small;
+  color: white;
 
   @include small-screen-breakpoint {
     font-size: $text-medium;
@@ -34,7 +36,7 @@
 }
 
 .adovalImg {
-  border-radius: 6.7%;
+  border-radius: 6.7% !important;
   margin-bottom: $spacing-medium;
 }
 
