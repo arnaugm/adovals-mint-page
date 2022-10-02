@@ -111,11 +111,11 @@ const App = () => {
         <p className={STYLES.walletAddress}>Wallet address: {account}</p>
       )}
       <img
-        srcSet="https://adovals.com/wp-content/uploads/2022/09/adoval-240w.png 240w,
-                https://adovals.com/wp-content/uploads/2022/09/adoval-480w.png 480w"
+        srcSet="https://adovals.com/wp-content/uploads/2022/10/adoval-240w.gif 240w,
+                https://adovals.com/wp-content/uploads/2022/10/adoval-480w.gif 480w"
         sizes="(max-width: 580px) 240px,
                480px"
-        src="https://adovals.com/wp-content/uploads/2022/09/adoval-480w.png"
+        src="https://adovals.com/wp-content/uploads/2022/10/adoval-480w.gif"
         className={STYLES.adovalImg}
         alt="Adovals"
       />
