@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import STYLES from './App.module.scss';
 import TokensInfo from './TokensInfo';
 import MintControls from './MintControls';
+import MintedTokens from './MintedTokens';
 import PromptMessage from './PromptMessage';
 import {
   blockchainConnect,
@@ -166,6 +167,7 @@ const App = () => {
           >
             Connect wallet
           </button>
+          <MintedTokens />
         </div>
       )}
 
