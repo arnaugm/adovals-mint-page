@@ -105,7 +105,8 @@ const App = () => {
     <div className={STYLES.App}>
       <h1 className={STYLES.title}>Mint your Adovals!</h1>
       <div className={STYLES.dates}>
-        Presale opens on {presaleDate} and public mint on {publicMintDate}
+        <p>Presale: {presaleDate}</p>
+        <p>Public mint: {publicMintDate}</p>
       </div>
       {window.ethereum && (
         <p className={STYLES.walletAddress}>Wallet address: {account}</p>

@@ -29,6 +29,10 @@
   @include small-screen-breakpoint {
     font-size: $text-small;
   }
+
+  p {
+    margin: 0;
+  }
 }
 
 .walletAddress {
