@@ -5,7 +5,7 @@ import Adovals from './artifacts/contracts/Adovals.sol/Adovals.json';
 import { contractAddress } from './config';
 
 const providerNetwork =
-  process.env.NODE_ENV === 'development' ? 'mainnet' : 'http://127.0.0.1:8545';
+  process.env.NODE_ENV === 'production' ? 'mainnet' : 'http://127.0.0.1:8545';
 let contract;
 let contractRO;
 
