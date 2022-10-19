@@ -11,6 +11,10 @@ const presalePrice = '0.03';
 const onSuccess = () => {};
 const onError = () => {};
 
+jest.mock('../../allowlist', () => [
+  '0x00314e565e0574cb412563df634608d76f5c59d9f817e85966100ec1d48005c0',
+]);
+
 describe('Mint controls', () => {
   test('public mint allowlisted displays mint controls', () => {
     render(

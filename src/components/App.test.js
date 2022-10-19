@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import {
@@ -12,6 +12,8 @@ import {
   getInPresale,
   getEnabled,
   mintToken,
+  getMintedTokensRO,
+  getTotalTokensRO,
 } from '../contract-gateway';
 
 let App;
@@ -55,6 +57,9 @@ const isMetaMaskInstalled = () => {
 };
 
 jest.mock('../contract-gateway');
+jest.mock('../allowlist', () => [
+  '0x00314e565e0574cb412563df634608d76f5c59d9f817e85966100ec1d48005c0',
+]);
 
 beforeEach(() => {
   blockchainConnect.mockImplementation(async (callback) => {
@@ -75,6 +80,8 @@ beforeEach(() => {
   getPresaleMaxMintAmount.mockImplementation(() => Promise.resolve(2));
   getInPresale.mockImplementation(() => Promise.resolve(true));
   mintToken.mockImplementation(() => Promise.resolve());
+  getMintedTokensRO.mockImplementation(() => Promise.resolve(2));
+  getTotalTokensRO.mockImplementation(() => Promise.resolve(1500));
 
   App = require('./App').default; // eslint-disable-line global-require
 
@@ -110,6 +117,24 @@ describe('page load', () => {
       screen.queryByText(`Wallet address: ${allowlistedAddress}`),
     ).toBeNull();
     expect(screen.getByText('Connect wallet')).toBeInTheDocument();
+  });
+
+  describe('read only data', () => {
+    test('load read only data while not connected', async () => {
+      render(<App />);
+
+      expect(await screen.findByText('Adovals minted')).toBeInTheDocument();
+      expect(screen.getByText('Connect wallet')).toBeInTheDocument();
+    });
+
+    test('read only data not available', () => {
+      getMintedTokensRO.mockImplementation(() => Promise.reject(new Error()));
+
+      render(<App />);
+
+      expect(screen.queryByText('Adovals minted')).toBeNull();
+      expect(screen.getByText('Connect wallet')).toBeInTheDocument();
+    });
   });
 });
 

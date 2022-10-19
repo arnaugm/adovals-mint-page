@@ -4,7 +4,10 @@ import Adovals from './artifacts/contracts/Adovals.sol/Adovals.json';
 
 import { contractAddress } from './config';
 
+const providerNetwork =
+  process.env.NODE_ENV === 'development' ? 'mainnet' : 'http://127.0.0.1:8545';
 let contract;
+let contractRO;
 
 const isMetaMaskInstalled = () => {
   const { ethereum } = window;
@@ -23,6 +26,11 @@ const blockchainConnect = async (callback) => {
   } else {
     throw Error('Please install MetaMask to interact with this page');
   }
+};
+
+const blockchainConnectRO = async () => {
+  const provider = ethers.getDefaultProvider(providerNetwork);
+  contractRO = new ethers.Contract(contractAddress, Adovals.abi, provider);
 };
 
 const getMintedTokens = async () => {
@@ -70,6 +78,18 @@ const mintToken = async (amount, merkleProof, price) => {
   });
 };
 
+const getMintedTokensRO = async () => {
+  if (!contractRO) await blockchainConnectRO();
+  const totalSupply = await contractRO.totalSupply();
+  return totalSupply.toNumber();
+};
+
+const getTotalTokensRO = async () => {
+  if (!contractRO) await blockchainConnectRO();
+  const maxSupply = await contractRO.maxSupply();
+  return maxSupply.toNumber();
+};
+
 export {
   blockchainConnect,
   getMintedTokens,
@@ -83,4 +103,6 @@ export {
   enableContract,
   disableContract,
   mintToken,
+  getMintedTokensRO,
+  getTotalTokensRO,
 };

@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 
-import STYLES from './App.module.scss';
 import TokensInfo from './TokensInfo';
 import MintControls from './MintControls';
-import MintedTokens from './MintedTokens';
+import TokensMinted from './TokensMinted';
 import PromptMessage from './PromptMessage';
 import {
   blockchainConnect,
@@ -14,9 +13,13 @@ import {
   getMaxMintAmount,
   getPresaleMaxMintAmount,
   getInPresale,
+  getMintedTokensRO,
+  getTotalTokensRO,
 } from '../contract-gateway';
 import { presaleDate, publicMintDate } from '../config';
 import { parseError } from '../error-parser';
+
+import STYLES from './App.module.scss';
 
 const addMaterialIconsLink = () => {
   const link = document.createElement('link');
@@ -30,6 +33,7 @@ addMaterialIconsLink();
 const App = () => {
   const [connectionReady, setConnectionReady] = useState(false);
   const [contractData, setContractData] = useState();
+  const [readOnlyData, setReadOnlyData] = useState();
   const [account, setAccount] = useState(null);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
@@ -92,6 +96,20 @@ const App = () => {
     }
   };
 
+  const getReadOnlyData = async () => {
+    try {
+      const minted = await getMintedTokensRO();
+      const total = await getTotalTokensRO();
+
+      setReadOnlyData({
+        minted,
+        total,
+      });
+    } catch (e) {
+      console.error('Read Only contract not available');
+    }
+  };
+
   const displaySuccessMessage = (displayMessage) => {
     setMessage(displayMessage);
   };
@@ -99,6 +117,8 @@ const App = () => {
   useEffect(() => {
     if (connectionReady) {
       refreshData();
+    } else {
+      getReadOnlyData();
     }
   }, [connectionReady]);
 
@@ -151,6 +171,12 @@ const App = () => {
         </>
       ) : (
         <div>
+          {readOnlyData && (
+            <TokensMinted
+              minted={readOnlyData.minted}
+              total={readOnlyData.total}
+            />
+          )}
           <button
             className={STYLES.actionButton}
             disabled={!connectButtonEnabled}
@@ -167,7 +193,6 @@ const App = () => {
           >
             Connect wallet
           </button>
-          <MintedTokens />
         </div>
       )}
 

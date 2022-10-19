@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 
+import TokensMinted from '../TokensMinted';
+
 import STYLES from './TokensInfo.module.scss';
 
 const TokensInfo = ({ minted, total, price }) => (
   <div>
-    <div className={STYLES.mintedTokens}>
-      {minted} / {total}
-    </div>
-    <div className={STYLES.mintedTokensText}>Adovals minted</div>
+    <TokensMinted total={total} minted={minted} />
     <div className={STYLES.tokenPrice}>
       {price} ETH
       <p className={STYLES.gasDisclaimer}>

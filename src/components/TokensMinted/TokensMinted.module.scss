@@ -1,0 +1,17 @@
+@import '../common/text.scss';
+@import '../common/spacing.scss';
+@import '../common/breakpoints.scss';
+
+.mintedTokens {
+  font-size: $text-xl;
+  font-weight: bold;
+
+  @include small-screen-breakpoint {
+    font-size: $text-large;
+  }
+}
+
+.mintedTokensText {
+  font-size: $text-base;
+  margin-bottom: $spacing-medium;
+}
