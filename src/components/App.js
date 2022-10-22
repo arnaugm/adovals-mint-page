@@ -66,7 +66,7 @@ const App = () => {
 
   const displayErrorMessage = (displayMessage, consoleMessage) => {
     setError(displayMessage);
-    console.error(consoleMessage);
+    console.error(consoleMessage); // eslint-disable-line no-console
   };
 
   const refreshData = async () => {
@@ -106,7 +106,7 @@ const App = () => {
         total,
       });
     } catch (e) {
-      console.error('Read Only contract not available');
+      console.error('Read Only contract not available'); // eslint-disable-line no-console
     }
   };
 
