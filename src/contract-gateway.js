@@ -2,10 +2,10 @@ import { ethers } from 'ethers';
 
 import Adovals from './artifacts/contracts/Adovals.sol/Adovals.json';
 
-import { contractAddress } from './config';
+import { contractAddress, ETHERSCAN_API_KEY, ALCHEMY_API_KEY } from './config';
 
 const providerNetwork =
-  process.env.NODE_ENV === 'production' ? 'mainnet' : 'http://127.0.0.1:8545';
+  process.env.NODE_ENV === 'production' ? 'homestead' : 'http://127.0.0.1:8545';
 let contract;
 let contractRO;
 
@@ -29,7 +29,10 @@ const blockchainConnect = async (callback) => {
 };
 
 const blockchainConnectRO = async () => {
-  const provider = ethers.getDefaultProvider(providerNetwork);
+  const provider = ethers.getDefaultProvider(providerNetwork, {
+    etherscan: ETHERSCAN_API_KEY,
+    alchemy: ALCHEMY_API_KEY,
+  });
   contractRO = new ethers.Contract(contractAddress, Adovals.abi, provider);
 };
 
