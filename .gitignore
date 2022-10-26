@@ -11,6 +11,7 @@
 # production
 /build
 /src/artifacts
+/src/allowlist.js
 
 # misc
 .DS_Store
