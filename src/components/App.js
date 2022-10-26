@@ -16,7 +16,6 @@ import {
   getMintedTokensRO,
   getTotalTokensRO,
 } from '../contract-gateway';
-import { presaleDate, publicMintDate } from '../config';
 import { parseError } from '../error-parser';
 
 import STYLES from './App.module.scss';
@@ -126,8 +125,7 @@ const App = () => {
     <div className={STYLES.App}>
       <h1 className={STYLES.title}>Mint your Adovals!</h1>
       <div className={STYLES.dates}>
-        <p>Presale: {presaleDate}</p>
-        <p>Public mint: {publicMintDate}</p>
+        <p>Minting Live</p>
       </div>
       {window.ethereum && (
         <p className={STYLES.walletAddress}>Wallet address: {account}</p>
