@@ -125,7 +125,7 @@ const App = () => {
     <div className={STYLES.App}>
       <h1 className={STYLES.title}>Mint your Adovals!</h1>
       <div className={STYLES.dates}>
-        <p>Minting Live</p>
+        <p>Black Friday 50% Discount</p>
       </div>
       {window.ethereum && (
         <p className={STYLES.walletAddress}>Wallet address: {account}</p>
